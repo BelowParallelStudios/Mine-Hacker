@@ -13,15 +13,24 @@ public class MoveTest2 : MonoBehaviour {
 	private Rigidbody2D rb2d;
 
 	private RaycastHit2D lineHit;
+    
+    private bool doCast = false;
 
 
-	void Start () {
+    void Awake()
+    {
+        boxCollider = GetComponent <BoxCollider2D> ();
+        rb2d = GetComponent<Rigidbody2D>();
+
+        endpos  = transform.position;
+    }
+	/*void Start () {
 		
 		boxCollider = GetComponent <BoxCollider2D> ();
 		rb2d = GetComponent<Rigidbody2D>();
 
 		endpos  = transform.position;
-	}
+	}*/
 
 	/*void Update () {
 		if (moving && ((Vector2)transform.position == endpos))
@@ -52,8 +61,9 @@ public class MoveTest2 : MonoBehaviour {
 
 	void Update()
 	{
-		//Debug.Log (transform.position + "compared to" + endpos);
-		Move ();
+		//Debug.Log (transform.position + "compared to" + endpos);        
+            Move();
+        
 	}
 
 	public bool Move()
@@ -63,9 +73,14 @@ public class MoveTest2 : MonoBehaviour {
 		GetInputs ();
 
 		Vector2 endPos = endpos;
-		boxCollider.enabled = false;
-		lineHit = Physics2D.Linecast(startPos, endPos, blockingLayer);
-		boxCollider.enabled = true;
+        
+        if (doCast == true)
+        {
+            boxCollider.enabled = false; //THE PROBLEM WITH UPDATING ONTRIGGERENTER
+            lineHit = Physics2D.Linecast(startPos, endPos, blockingLayer);
+            boxCollider.enabled = true;
+            doCast = false;
+        }
 
 		if (lineHit.transform == null) {
 			MoveRoutine (endPos);
@@ -86,26 +101,34 @@ public class MoveTest2 : MonoBehaviour {
 
 		if(!moving && Input.GetKeyDown(KeyCode.W)){
 			Debug.Log ("pressed W");
+            doCast = true;
 			moving = true;
 			endpos = (Vector2)transform.position + Vector2.up;
+            GameManager.instance.lastMove = "up";
 		}
 
 		if(!moving && Input.GetKeyDown(KeyCode.A)){
 			Debug.Log ("pressed A");
+            doCast = true;
 			moving = true;
 			endpos = (Vector2)transform.position + Vector2.left;
+            GameManager.instance.lastMove = "left";
 		}
 
 		if(!moving && Input.GetKeyDown(KeyCode.S)){
 			Debug.Log ("pressed S");
+            doCast = true;
 			moving = true;
 			endpos = (Vector2)transform.position + Vector2.down;
+            GameManager.instance.lastMove = "down";
 		}
 
 		if(!moving && Input.GetKeyDown(KeyCode.D)){
 			Debug.Log ("pressed D");
+            doCast = true;
 			moving = true;
 			endpos = (Vector2)transform.position + Vector2.right;
+            GameManager.instance.lastMove = "right";
 		}
 	}
 
@@ -115,4 +138,18 @@ public class MoveTest2 : MonoBehaviour {
 		//Debug.Log (speed);
 		rb2d.transform.position = Vector2.MoveTowards(transform.position, endpos, Time.deltaTime * speed);
 	}
+
+	/*public void OnTriggerEnter2D(Collider2D other)
+	{
+		Debug.Log ("anything");
+		if (other.tag == "Hidden Tile") {
+			Debug.Log ("it's happening");
+			other.gameObject.SetActive (false);
+		} 
+		else if (other.tag == "Wall") 
+		{
+			Debug.Log ("Wall hit");
+		}
+	}*/
+
 }
