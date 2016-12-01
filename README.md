@@ -13,9 +13,13 @@ HOW TO PLAY:
 2. All tiles are hidden until you have moved onto them. Take note of the Mine Sensor in the top left corner of your screen. This lets you know how many mines are in the 4 tiles adjacent to your character. For example, in the diagram below, the Mine Sensor would display a "2".
 
 0 0 0 0 0
+
 0 0 X * 0
+
 0 * * 0 0
+
 0 0 0 0 0
+
 0 0 0 0 0
 
 Legend: 
